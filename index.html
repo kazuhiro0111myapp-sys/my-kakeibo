@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12283d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+<title>マイ家計簿</title>
+</head>
+<body>
+<header><div><div class="eyebrow">PERSONAL FINANCE</div><h1>マイ家計簿</h1></div><span class="local-pill">このiPhone内に保存</span></header>
+<main>
+<section class="monthbar"><label for="month">集計月</label><input type="month" id="month"></section>
+<section class="summary">
+ <div><span>収入</span><b id="income">¥0</b></div><div><span>支出</span><b id="expense">¥0</b></div>
+ <div class="net"><span>収支</span><b id="net">¥0</b></div>
+</section>
+<section class="panel">
+ <div class="section-title"><h2>金融データの更新</h2><span class="tag">手動・毎回承認</span></div>
+ <p class="help">各サービスの公式アプリ／サイトで明細をダウンロードし、この画面に戻ってCSVを選択します。アプリが金融機関へ自動アクセスすることはありません。</p>
+ <div class="service-grid">
+  <article class="service"><div class="service-head"><span class="bank-icon">SM</span><div><b>三井住友銀行</b><small>Web通帳・入出金明細</small></div></div><a class="outlink" href="https://direct.smbc.co.jp/" target="_blank" rel="noopener">SMBCダイレクトを開く ↗</a><ol><li>ログインして対象口座を選択</li><li>入出金明細を表示</li><li>CSVダウンロードを選択</li><li>ファイルに保存して戻る</li></ol><button class="light select-service" data-source="三井住友銀行">CSVを選択</button></article>
+  <article class="service"><div class="service-head"><span class="bank-icon sony">S</span><div><b>ソニー銀行</b><small>通帳・取引履歴</small></div></div><a class="outlink" href="https://moneykit.net/" target="_blank" rel="noopener">Sony Bankを開く ↗</a><ol><li>ログインして通帳を開く</li><li>対象期間を指定</li><li>取引履歴をCSV保存</li><li>ファイルに保存して戻る</li></ol><button class="light select-service" data-source="ソニー銀行">CSVを選択</button></article>
+  <article class="service"><div class="service-head"><span class="bank-icon pay">P</span><div><b>PayPay</b><small>取引履歴</small></div></div><a class="outlink" href="https://paypay.ne.jp/" target="_blank" rel="noopener">PayPay公式サイト ↗</a><ol><li>PayPayアプリの取引履歴を開く</li><li>ダウンロードから期間を指定</li><li>履歴ファイルを取得</li><li>ファイルに保存して戻る</li></ol><button class="light select-service" data-source="PayPay">CSVを選択</button></article>
+ </div>
+ <div class="manual-import">
+  <label for="source">取り込み元</label><select id="source"><option>三井住友銀行</option><option>ソニー銀行</option><option>PayPay</option></select>
+  <input type="file" id="csvFile" accept=".csv,text/csv">
+  <button id="previewBtn">CSVを読み込んで確認</button>
+  <div id="preview" class="preview" hidden>
+   <h3>取り込み内容の確認</h3><p id="previewSummary"></p><div id="previewRows"></div>
+   <label class="consent"><input type="checkbox" id="consent"> この明細を家計簿に登録することを承認します</label>
+   <button id="commitBtn" disabled>承認して取り込む</button>
+  </div>
+ </div>
+</section>
+<section class="panel">
+ <div class="section-title"><h2>口座残高</h2><span class="tag">手動更新</span></div>
+ <p class="help">残高はCSVに含まれない場合があるため、公式アプリで確認した金額を手入力できます。</p>
+ <label for="balanceSource">金融サービス</label><select id="balanceSource"><option>三井住友銀行</option><option>ソニー銀行</option><option>PayPay</option></select>
+ <label for="balanceAmount">確認した残高（円）</label><input id="balanceAmount" type="number" inputmode="numeric" placeholder="例：1250000">
+ <button id="saveBalance">残高を記録</button>
+ <div id="balances" class="balance-list"></div>
+</section>
+<section class="panel">
+ <div class="section-title"><h2>取引履歴</h2><button class="text-btn" id="exportBtn">バックアップを書き出す</button></div>
+ <div id="transactions"><p class="muted">取引データはまだありません。</p></div>
+</section>
+<section class="panel">
+ <h2>手入力で追加</h2>
+ <label for="memo">内容</label><input id="memo" placeholder="例：給与、食費">
+ <div class="two"><div><label for="kind">区分</label><select id="kind"><option value="expense">支出</option><option value="income">収入</option></select></div><div><label for="amount">金額（円）</label><input id="amount" type="number" min="1" inputmode="numeric"></div></div>
+ <button id="addBtn">取引を追加</button>
+</section>
+<section class="privacy"><b>プライバシーについて</b><p>取引データはこのブラウザのIndexedDBに保存します。外部サーバーへの送信・自動同期・バックグラウンド取得は行いません。Safariの履歴／Webサイトデータ削除や端末故障に備え、定期的にバックアップを書き出してください。</p></section>
+</main>
+<input type="file" id="hiddenFile" accept=".csv,text/csv" hidden>
+<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});</script><script src="app.js"></script>
+</body></html>
